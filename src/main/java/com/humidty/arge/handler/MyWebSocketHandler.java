@@ -9,10 +9,13 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import org.json.*;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 @Component
 public class MyWebSocketHandler extends TextWebSocketHandler {
-
+    // Kabul edilecek deviceID'lerin listesi
+    private final List<String> acceptedDeviceIds = Arrays.asList("ARDUINO001", "ARDUINO002", "ARDUINO003");
     private final WebSocketController webSocketController;
 
     @Autowired
@@ -30,6 +33,12 @@ public class MyWebSocketHandler extends TextWebSocketHandler {
 
         // JSON objesinden deviceID ve humidity değerlerini alın
         String deviceId = jsonObj.getString("deviceID");
+
+        // Eğer deviceID, kabul edilenler listesinde değilse, bağlantıyı kapat
+        if (!acceptedDeviceIds.contains(deviceId)) {
+            return;
+        }
+
 
         double humidity = jsonObj.getDouble("humidity");
 

@@ -7,12 +7,15 @@ import org.springframework.data.annotation.Id;
 import java.util.Date;
 
 @Data
-public class Sensor {
+public class Device {
+
     @Id
-    private  String id;
+    private  String deviceID;
     private Boolean status;
+    private Boolean stop;
     private Double humidity;
-    private Date date = new Date();
+
+    private Date createDate = new Date();
 
 
 }
