@@ -13,8 +13,6 @@ public class Device {
     private  String deviceID;
     private Boolean status;
     private Boolean stop;
-    private Double humidity;
-
     private Date createDate = new Date();
 
 

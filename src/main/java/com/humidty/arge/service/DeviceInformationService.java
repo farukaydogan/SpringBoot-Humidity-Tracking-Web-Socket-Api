@@ -21,11 +21,12 @@ public class DeviceInformationService {
         return  deviceInformationRepository.findByDeviceID(deviceInformation.getDeviceID());
     }
 
-    public  DeviceInformation getDeviceInfoByID(String id){
-        return deviceInformationRepository.findById(id).orElseThrow(() -> new RuntimeException("Device Infos Not Found"));
+    public  List<DeviceInformation> getDeviceInfoByID(String id){
+        return deviceInformationRepository.findByDeviceID(id);
     }
 
     public DeviceInformation createDeviceInfo(DeviceInformation newDevice){
         return deviceInformationRepository.save(newDevice);
     }
+
 }

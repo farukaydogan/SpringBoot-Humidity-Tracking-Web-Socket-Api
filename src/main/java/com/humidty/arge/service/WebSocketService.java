@@ -1,29 +1,23 @@
-package com.humidty.arge.controller;
+package com.humidty.arge.service;
 
 import com.humidty.arge.model.Device;
 import com.humidty.arge.model.DeviceInformation;
-import com.humidty.arge.service.DeviceInformationService;
-import com.humidty.arge.service.DeviceService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
 
-@Controller
-public class WebSocketController {
+@Service
+public class WebSocketService{
+    private final DeviceService deviceService;
+
+    private final DeviceInformationService deviceInformationService;
 
     @Autowired
-    private DeviceService deviceService;
-
-    @Autowired
-    private DeviceInformationService deviceInformationService;
-    public WebSocketController(DeviceService deviceService,DeviceInformationService deviceInformationService){
+    public WebSocketService(@Lazy DeviceService deviceService, DeviceInformationService deviceInformationService) {
         this.deviceService = deviceService;
         this.deviceInformationService = deviceInformationService;
-
     }
-
-
-
 
     public TextMessage handleHumidity(String deviceID,double humidity) {
         //        save db humidity
@@ -33,7 +27,6 @@ public class WebSocketController {
         deviceInformation.setDeviceID(deviceID);
 
         String textMessage;
-
 
         Device device=new Device();
         // Bu değerleri kullanarak istediğiniz işlemleri yapabilirsiniz

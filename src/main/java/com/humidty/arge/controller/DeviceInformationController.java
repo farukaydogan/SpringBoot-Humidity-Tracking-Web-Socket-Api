@@ -23,15 +23,9 @@ public class DeviceInformationController {
         this.deviceInformationService = deviceInformationService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<DeviceInformation>> getDeviceInfo(@RequestBody DeviceInformation deviceInformation) {
-
-        return new ResponseEntity<>(deviceInformationService.getDeviceAllInfoByDeviceID(deviceInformation), OK);
-    }
-
 
     @GetMapping("/{id}")
-    public ResponseEntity<DeviceInformation> getDeviceInfoById(@PathVariable String id) {
+    public ResponseEntity<List<DeviceInformation>> getDeviceInfoById(@PathVariable String id) {
         return new ResponseEntity<>(deviceInformationService.getDeviceInfoByID(id), OK);
     }
 
