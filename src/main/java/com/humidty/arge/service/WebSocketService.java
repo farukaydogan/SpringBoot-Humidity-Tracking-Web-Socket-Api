@@ -26,19 +26,17 @@ public class WebSocketService{
         deviceInformation.setHumidity(humidity);
         deviceInformation.setDeviceID(deviceID);
 
-        String textMessage;
-
         Device device=new Device();
         // Bu değerleri kullanarak istediğiniz işlemleri yapabilirsiniz
         if (humidity < 50) {
             device.setStatus(true);
-            textMessage="LED is ON";
         } else {
             device.setStatus(false);
-            textMessage="LED is OFF";
         }
         deviceService.updateDevice(deviceID,device);
+
         deviceInformationService.createDeviceInfo(deviceInformation);
-        return new TextMessage(textMessage);
+
+        return deviceService.prepareStatusDeviceJson(deviceID,"handle success");
     }
 }

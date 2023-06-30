@@ -2,6 +2,8 @@ package com.humidty.arge.handler;
 
 ;
 
+import com.humidty.arge.model.Device;
+import com.humidty.arge.service.DeviceService;
 import com.humidty.arge.service.SessionManagementService;
 import com.humidty.arge.service.WebSocketService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +37,10 @@ public class MyWebSocketHandler extends TextWebSocketHandler  {
 
     @Autowired
     private WebSocketService webSocketService;
+
+    @Autowired
+    private DeviceService deviceService;
+
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) throws InterruptedException, IOException, IOException {
         // get payload from message
@@ -51,12 +57,12 @@ public class MyWebSocketHandler extends TextWebSocketHandler  {
             return;
         }
 
-
         double humidity = jsonObj.getDouble("humidity");
 
         TextMessage responseMessage = webSocketService.handleHumidity(deviceId,humidity);
 
         session.sendMessage(responseMessage);
+
     }
 
     @Override
@@ -68,7 +74,9 @@ public class MyWebSocketHandler extends TextWebSocketHandler  {
 
         String deviceID = pathParameters.get("deviceID");
 
-        sessionManagementService.registerSession(deviceID,session);
+        // devicein last state check edilip ona gore mesaj gonderiliyor
+        sessionManagementService.registerSession(deviceID,session,deviceService.prepareStatusDeviceJson(deviceID,"Device Connect successfully"));
+
 
     }
 

@@ -2,6 +2,7 @@ package com.humidty.arge.service;
 
 import com.humidty.arge.model.Device;
 import com.humidty.arge.repository.DeviceRepository;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -66,10 +67,9 @@ public class DeviceService {
         WebSocketSession deviceSession = sessionManagementService.getSessionById(id);
 
         if (deviceSession != null && deviceSession.isOpen()) {
-            deviceSession.sendMessage(new TextMessage("start"));
+            deviceSession.sendMessage(prepareStatusDeviceJson(id,"Device Is Started"));
         } else {
             System.out.println("startElse");
-
         }
     }
 
@@ -82,10 +82,24 @@ public class DeviceService {
         // Send stop message to device
         WebSocketSession deviceSession = sessionManagementService.getSessionById(id);
         if (deviceSession != null && deviceSession.isOpen()) {
-            deviceSession.sendMessage(new TextMessage("stop"));
+            deviceSession.sendMessage(prepareStatusDeviceJson(id,"Device Is Stopped"));
         } else {
             System.out.println("stopElse");
         }
+    }
+
+    public TextMessage prepareStatusDeviceJson(String id,String message){
+        JSONObject status = new JSONObject();
+
+        Device device =getDeviceById(id);
+
+        status.put("status", device.getStatus());
+
+        status.put("stop", device.getStop());
+
+        status.put("message",message);
+
+        return new TextMessage(status.toString());
     }
 
 
