@@ -5,6 +5,8 @@ import com.humidty.arge.repository.DeviceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
 import java.util.List;
@@ -53,34 +55,38 @@ public class DeviceService {
         deviceRepository.delete(device);
     }
 
-    public void stopDevice(String id) {
+    public void startDevice(String id) throws IOException {
+
         Device oldDevice = getDeviceById(id);
-
-        try {
-            sessionManagementService.sendMessageToDevice(id, "start"); // or any other message you want to send
-        } catch (IOException e) {
-            // handle the exception
-            System.err.println("Error while sending a message to the device: " + e.getMessage());
-        }
-        oldDevice.setStatus(false);
-        oldDevice.setStop(true);
-        deviceRepository.save(oldDevice);
-    }
-
-    public void startDevice(String id) {
-        Device oldDevice = getDeviceById(id);
-
-        try {
-            sessionManagementService.sendMessageToDevice(id, "start"); // or any other message you want to send
-        } catch (IOException e) {
-            // handle the exception
-            System.err.println("Error while sending a message to the device: " + e.getMessage());
-        }
-
         oldDevice.setStatus(true);
         oldDevice.setStop(false);
         deviceRepository.save(oldDevice);
 
+        // Send start message to device
+        WebSocketSession deviceSession = sessionManagementService.getSessionById(id);
+
+        if (deviceSession != null && deviceSession.isOpen()) {
+            deviceSession.sendMessage(new TextMessage("start"));
+        } else {
+            System.out.println("startElse");
+
+        }
     }
+
+    public void stopDevice(String id) throws IOException {
+        Device oldDevice = getDeviceById(id);
+        oldDevice.setStatus(false);
+        oldDevice.setStop(true);
+        deviceRepository.save(oldDevice);
+
+        // Send stop message to device
+        WebSocketSession deviceSession = sessionManagementService.getSessionById(id);
+        if (deviceSession != null && deviceSession.isOpen()) {
+            deviceSession.sendMessage(new TextMessage("stop"));
+        } else {
+            System.out.println("stopElse");
+        }
+    }
+
 
 }

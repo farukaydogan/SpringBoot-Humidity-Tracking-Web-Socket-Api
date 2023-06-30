@@ -12,6 +12,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import org.json.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -58,20 +59,17 @@ public class MyWebSocketHandler extends TextWebSocketHandler  {
         session.sendMessage(responseMessage);
     }
 
-    public final Map<String, WebSocketSession> deviceSessions = new ConcurrentHashMap<>();
-
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws IOException {
         // Cihazın deviceID'sini alın (bu kodun düzgün çalışabilmesi için,
         // cihazın ilk mesajının deviceID'sini içermesi gerekmektedir)
-        String deviceId = (String) session.getAttributes().get("deviceID");
+        Map<String, String> pathParameters = UriComponentsBuilder.fromUri(session.getUri()).build().getQueryParams()
+                .toSingleValueMap();
 
-        sessionManagementService.registerSession(session);
+        String deviceID = pathParameters.get("deviceID");
 
-        System.out.println("Connection established");
-        session.sendMessage(new TextMessage("Welcome! Connection is successful."));
+        sessionManagementService.registerSession(deviceID,session);
+
     }
-
-
 
 }

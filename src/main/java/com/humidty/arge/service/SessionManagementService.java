@@ -14,6 +14,7 @@ public class SessionManagementService {
 
     public void sendMessageToDevice(String deviceId, String message) throws IOException {
         WebSocketSession session = deviceSessions.get(deviceId);
+        System.out.println(deviceSessions);
         if (session != null && session.isOpen()) {
             session.sendMessage(new TextMessage(message));
         }
@@ -25,11 +26,19 @@ public class SessionManagementService {
 
     }
 
-    public void registerSession(WebSocketSession session) throws IOException {
-        String deviceId = (String) session.getAttributes().get("deviceID");
-        this.deviceSessions.put(deviceId, session);
+    public WebSocketSession getSessionById(String id) {
+        return deviceSessions.get(id);
+    }
+
+    public void registerSession(String deviceID, WebSocketSession session) throws IOException {
+        // Get the deviceID of the device (for this code to work properly,
+        // the first message from the device must contain its deviceID)
+
+        deviceSessions.put(deviceID, session);
+
         System.out.println("Connection established");
         session.sendMessage(new TextMessage("Welcome! Connection is successful."));
+
     }
 
     // Diğer oturum yönetimi metodları buraya gelebilir
