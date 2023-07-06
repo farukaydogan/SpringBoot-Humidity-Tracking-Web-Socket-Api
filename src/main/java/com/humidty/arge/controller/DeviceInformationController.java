@@ -1,17 +1,15 @@
 package com.humidty.arge.controller;
 
 
-import com.humidty.arge.model.Device;
 import com.humidty.arge.model.DeviceInformation;
 import com.humidty.arge.service.DeviceInformationService;
-import com.humidty.arge.service.DeviceService;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
 
 import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.OK;
 
 
 @RestController
@@ -25,8 +23,24 @@ public class DeviceInformationController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<List<DeviceInformation>> getDeviceInfoById(@PathVariable String id) {
-        return new ResponseEntity<>(deviceInformationService.getDeviceInfoByID(id), OK);
+    public ResponseEntity<Page<DeviceInformation>> getDeviceInfoLastProcessById(@PathVariable String id,
+                                                                     @RequestParam(value = "pageNumber", required = false) Integer pageNumber,
+                                                                     @RequestParam(value = "pageSize", required = false) Integer pageSize) {
+
+        int defaultPageNumber = 0;
+        int defaultPageSize = 10;
+
+        if (pageNumber == null) {
+            pageNumber = defaultPageNumber;
+        }
+        if (pageSize == null) {
+            pageSize = defaultPageSize;
+        }
+
+       Page<DeviceInformation> deviceInfoPage = deviceInformationService.getDeviceInfoByID(id, pageNumber, pageSize, Sort.by(Sort.Direction.DESC, "date"));
+
+
+        return new ResponseEntity<>(deviceInfoPage, HttpStatus.OK);
     }
 
     @PostMapping
