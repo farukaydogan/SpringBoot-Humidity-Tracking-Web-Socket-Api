@@ -1,0 +1,107 @@
+#include <SoftwareSerial.h>
+
+class GSMModule {
+  private:
+    SoftwareSerial gsm;
+
+  public:
+    GSMModule(int rxPin, int txPin): gsm(rxPin, txPin) {}
+
+    void begin(int baudRate) {
+      gsm.begin(baudRate);
+    }
+
+    bool available() {
+      return gsm.available();
+    }
+
+    int read() {
+      return gsm.read();
+    }
+
+    void write(uint8_t b) {
+      gsm.write(b);
+    }
+
+    void sendATCommand(const char* command, int delayMs = 1000) {
+      gsm.println(command);
+      delay(delayMs);
+      showSerialData();
+    }
+
+    void checkPin() {
+      sendATCommand("AT+CPIN?");
+    }
+
+    void checkRegistration() {
+      sendATCommand("AT+CREG?");
+    }
+
+    void checkAttachment() {
+      sendATCommand("AT+CGATT?");
+    }
+
+    void closePDPContext() {
+      sendATCommand("AT+CIPSHUT");
+    }
+
+    void checkIPStatus() {
+      sendATCommand("AT+CIPSTATUS", 2000);
+    }
+
+    void setSingleConnection() {
+      sendATCommand("AT+CIPMUX=0", 2000);
+    }
+
+    void startTask() {
+      sendATCommand("AT+CSTT=\"airtelgprs.com\"", 1000);
+    }
+
+    void bringUpWireless() {
+      sendATCommand("AT+CIICR", 3000);
+    }
+
+    void getLocalIP() {
+      sendATCommand("AT+CIFSR", 2000);
+    }
+
+    void showSerialData() {
+      while(gsm.available()!=0)
+        Serial.write(gsm.read());
+      delay(5000); 
+    }
+};
+
+GSMModule gsm(7, 8);
+
+void setup()
+{
+  Serial.begin(9600);
+  gsm.begin(9600);
+  Serial.println("hello amq");
+
+  gsm.checkPin();
+  gsm.checkRegistration();
+  gsm.checkAttachment();
+  gsm.closePDPContext();
+  gsm.setSingleConnection();
+  gsm.startTask();
+  gsm.bringUpWireless();
+  gsm.getLocalIP();
+}
+
+void loop()
+{  
+  static unsigned long lastSendTime = 0; // when the last sending occurred
+  unsigned long currentTime = millis(); // current time in milliseconds
+
+  while(gsm.available())
+    Serial.write(gsm.read());
+  while(Serial.available())
+    gsm.write(Serial.read());
+
+  if(currentTime - lastSendTime >= 10000) { // 10 seconds have passed
+    gsm.checkIPStatus(); 
+    lastSendTime = currentTime; // update the last send time
+  }
+}
