@@ -15,12 +15,18 @@ public class WebSocketService{
 
     private final DeviceInformationService deviceInformationService;
 
+
     @Autowired
     public WebSocketService(@Lazy DeviceService deviceService, DeviceInformationService deviceInformationService) {
         this.deviceService = deviceService;
         this.deviceInformationService = deviceInformationService;
     }
 
+    public void onOffInfoUpdateDevice(boolean onOrOf,String deviceId){
+        Device old= deviceService.getDeviceById(deviceId);
+        old.setIsOnline(onOrOf);
+        deviceService.updateDevice(deviceId,old);
+    }
     public TextMessage handleHumidity(String deviceID,double humidity) {
         //        save db humidity
 
@@ -28,14 +34,16 @@ public class WebSocketService{
         deviceInformation.setHumidity(humidity);
         deviceInformation.setDeviceID(deviceID);
 
+
         Device device=new Device();
         // Bu değerleri kullanarak istediğiniz işlemleri yapabilirsiniz
         if (humidity < device.getHumidity()) {
-            device.setStatus(true);
+            device.setWateringSituation(true);
             device.setLastWateringTime(new Date());
         } else {
-            device.setStatus(false);
+            device.setWateringSituation(false);
         }
+        device.setLastUpdateTime(new Date());
         deviceService.updateDevice(deviceID,device);
 
         deviceInformationService.createDeviceInfo(deviceInformation);

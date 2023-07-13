@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
@@ -20,6 +21,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
@@ -38,8 +40,10 @@ public class MyWebSocketHandler extends TextWebSocketHandler  {
     @Autowired
     private WebSocketService webSocketService;
 
+
     @Autowired
     private DeviceService deviceService;
+
 
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) throws InterruptedException, IOException, IOException {
@@ -69,15 +73,27 @@ public class MyWebSocketHandler extends TextWebSocketHandler  {
     public void afterConnectionEstablished(WebSocketSession session) throws IOException {
         // Cihazın deviceID'sini alın (bu kodun düzgün çalışabilmesi için,
         // cihazın ilk mesajının deviceID'sini içermesi gerekmektedir)
-        Map<String, String> pathParameters = UriComponentsBuilder.fromUri(session.getUri()).build().getQueryParams()
+        Map<String, String> pathParameters = UriComponentsBuilder.fromUri(Objects.requireNonNull(session.getUri())).build().getQueryParams()
                 .toSingleValueMap();
 
         String deviceID = pathParameters.get("deviceID");
 
+        webSocketService.onOffInfoUpdateDevice(true,deviceID);
         // devicein last state check edilip ona gore mesaj gonderiliyor
         sessionManagementService.registerSession(deviceID,session,deviceService.prepareStatusDeviceJson(deviceID,"Device Connect successfully"));
 
 
     }
 
+
+    @Override
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+        Map<String, String> pathParameters = UriComponentsBuilder.fromUri(session.getUri()).build().getQueryParams()
+                .toSingleValueMap();
+
+        String deviceID = pathParameters.get("deviceID");
+
+        webSocketService.onOffInfoUpdateDevice(false,deviceID);
+
+    }
 }

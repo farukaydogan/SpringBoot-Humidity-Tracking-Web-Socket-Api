@@ -10,6 +10,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -40,26 +41,28 @@ public class DeviceService {
     public Device createDevice(Device device) {
         Device newDevice = new Device();
         newDevice.setDeviceID(device.getDeviceID());
-        newDevice.setStatus(false);
-        newDevice.setStop(false);
+        newDevice.setCreateDate(new Date());
+        newDevice.setWateringSituation(false);
+        newDevice.setOffWatering(false);
         return deviceRepository.save(newDevice);
     }
 
     public void updateDevice(String id, Device updateDevice) {
         Device oldDevice = getDeviceById(id);
-        oldDevice.setStatus(updateDevice.getStatus());
+        oldDevice.setWateringSituation(updateDevice.getWateringSituation());
 
 
         if (updateDevice.getHumidity()!=0){
             oldDevice.setHumidity(updateDevice.getHumidity());
         }
-//        System.out.println("new");
-//        System.out.println(updateDevice.getSchedule().getDailySchedule());
-//        System.out.println("old");
-//        System.out.println(oldDevice.getSchedule().getDailySchedule());
-//        if (updateDevice.getSchedule().getDailySchedule()==null){
-//            System.out.println("its null");
-//        }
+
+        if (updateDevice.getIsOnline()!=null){
+            oldDevice.setIsOnline(updateDevice.getIsOnline());
+        }
+
+        if (updateDevice.getLastUpdateTime()!=null){
+            oldDevice.setLastUpdateTime(updateDevice.getLastUpdateTime());
+        }
         if (!updateDevice.getSchedule().getDailySchedule().isEmpty()){
             oldDevice.setSchedule(updateDevice.getSchedule());
         }
@@ -78,8 +81,8 @@ public class DeviceService {
     public void startDevice(String id) throws IOException {
 
         Device oldDevice = getDeviceById(id);
-        oldDevice.setStatus(true);
-        oldDevice.setStop(false);
+        oldDevice.setWateringSituation(true);
+        oldDevice.setOffWatering(false);
         deviceRepository.save(oldDevice);
 
         // Send start message to device
@@ -94,8 +97,8 @@ public class DeviceService {
 
     public void stopDevice(String id) throws IOException {
         Device oldDevice = getDeviceById(id);
-        oldDevice.setStatus(false);
-        oldDevice.setStop(true);
+        oldDevice.setWateringSituation(false);
+        oldDevice.setOffWatering(true);
         deviceRepository.save(oldDevice);
 
         // Send stop message to device
@@ -112,9 +115,9 @@ public class DeviceService {
 
         Device device =getDeviceById(id);
 
-        status.put("status", device.getStatus());
+        status.put("status", device.getWateringSituation());
 
-        status.put("stop", device.getStop());
+        status.put("stop", device.getOffWatering());
 
         status.put("message",message);
 
