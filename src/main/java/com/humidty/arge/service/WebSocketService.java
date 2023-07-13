@@ -33,7 +33,6 @@ public class WebSocketService{
         if (humidity < device.getHumidity()) {
             device.setStatus(true);
             device.setLastWateringTime(new Date());
-
         } else {
             device.setStatus(false);
         }

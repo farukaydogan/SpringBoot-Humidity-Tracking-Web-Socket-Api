@@ -50,6 +50,9 @@ public class DeviceService {
         oldDevice.setStatus(updateDevice.getStatus());
         oldDevice.setHumidity(updateDevice.getHumidity());
         oldDevice.setSchedule(updateDevice.getSchedule());
+        if (updateDevice.getLastWateringTime()!=null){
+            oldDevice.setLastWateringTime(updateDevice.getLastWateringTime());
+        }
         deviceRepository.save(oldDevice);
     }
 
