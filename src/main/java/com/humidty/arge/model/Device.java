@@ -21,6 +21,6 @@ public class Device {
     private Date createDate = new Date();
 
     public Device() {
-        this.schedule = new Schedule();
+        schedule = new Schedule();
     }
 }

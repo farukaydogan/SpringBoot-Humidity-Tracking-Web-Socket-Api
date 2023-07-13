@@ -48,8 +48,22 @@ public class DeviceService {
     public void updateDevice(String id, Device updateDevice) {
         Device oldDevice = getDeviceById(id);
         oldDevice.setStatus(updateDevice.getStatus());
-        oldDevice.setHumidity(updateDevice.getHumidity());
-        oldDevice.setSchedule(updateDevice.getSchedule());
+
+
+        if (updateDevice.getHumidity()!=0){
+            oldDevice.setHumidity(updateDevice.getHumidity());
+        }
+//        System.out.println("new");
+//        System.out.println(updateDevice.getSchedule().getDailySchedule());
+//        System.out.println("old");
+//        System.out.println(oldDevice.getSchedule().getDailySchedule());
+//        if (updateDevice.getSchedule().getDailySchedule()==null){
+//            System.out.println("its null");
+//        }
+        if (!updateDevice.getSchedule().getDailySchedule().isEmpty()){
+            oldDevice.setSchedule(updateDevice.getSchedule());
+        }
+
         if (updateDevice.getLastWateringTime()!=null){
             oldDevice.setLastWateringTime(updateDevice.getLastWateringTime());
         }
