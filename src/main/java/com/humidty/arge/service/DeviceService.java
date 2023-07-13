@@ -48,6 +48,8 @@ public class DeviceService {
     public void updateDevice(String id, Device updateDevice) {
         Device oldDevice = getDeviceById(id);
         oldDevice.setStatus(updateDevice.getStatus());
+        oldDevice.setHumidity(updateDevice.getHumidity());
+        oldDevice.setSchedule(updateDevice.getSchedule());
         deviceRepository.save(oldDevice);
     }
 

@@ -7,6 +7,8 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
 
+import java.util.Date;
+
 @Service
 public class WebSocketService{
     private final DeviceService deviceService;
@@ -28,8 +30,10 @@ public class WebSocketService{
 
         Device device=new Device();
         // Bu değerleri kullanarak istediğiniz işlemleri yapabilirsiniz
-        if (humidity < 50) {
+        if (humidity < device.getHumidity()) {
             device.setStatus(true);
+            device.setLastWateringTime(new Date());
+
         } else {
             device.setStatus(false);
         }
