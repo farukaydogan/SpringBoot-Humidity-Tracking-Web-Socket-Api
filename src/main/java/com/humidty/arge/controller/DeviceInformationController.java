@@ -1,7 +1,6 @@
 package com.humidty.arge.controller;
 
 
-import com.humidty.arge.model.Device;
 import com.humidty.arge.model.DeviceInformation;
 import com.humidty.arge.service.DeviceInformationService;
 import com.humidty.arge.service.DeviceService;
@@ -11,7 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Page;
 
-import java.util.Date;
+
+import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
@@ -31,9 +31,9 @@ public class DeviceInformationController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<Page<DeviceInformation>> getDeviceInfoLastProcessById(@PathVariable String id,
-                                                                     @RequestParam(value = "pageNumber", required = false) Integer pageNumber,
-                                                                     @RequestParam(value = "pageSize", required = false) Integer pageSize) {
+    public ResponseEntity<List<DeviceInformation>> getDeviceInfoLastProcessById(@PathVariable String id,
+                                                                                @RequestParam(value = "pageNumber", required = false) Integer pageNumber,
+                                                                                @RequestParam(value = "pageSize", required = false) Integer pageSize) {
 
         int defaultPageNumber = 0;
         int defaultPageSize = 10;
@@ -45,10 +45,12 @@ public class DeviceInformationController {
             pageSize = defaultPageSize;
         }
 
-       Page<DeviceInformation> deviceInfoPage = deviceInformationService.getDeviceInfoByID(id, pageNumber, pageSize, Sort.by(Sort.Direction.DESC, "date"));
+        Page<DeviceInformation> deviceInfoPage = deviceInformationService.getDeviceInfoByID(id, pageNumber, pageSize, Sort.by(Sort.Direction.DESC, "date"));
 
+        // Get the list of DeviceInformation objects from the page
+        List<DeviceInformation> deviceInfoList = deviceInfoPage.getContent();
 
-        return new ResponseEntity<>(deviceInfoPage, HttpStatus.OK);
+        return new ResponseEntity<>(deviceInfoList, HttpStatus.OK);
     }
 
     @PostMapping

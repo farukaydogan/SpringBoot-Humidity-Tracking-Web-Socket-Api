@@ -1,9 +1,7 @@
 package com.humidty.arge.service;
 
-import com.humidty.arge.model.Device;
 import com.humidty.arge.model.DeviceInformation;
 import com.humidty.arge.repository.DeviceInformationRepository;
-import com.humidty.arge.repository.DeviceRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -11,9 +9,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 
 @Service
