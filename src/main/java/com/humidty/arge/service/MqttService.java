@@ -32,6 +32,9 @@ public class MqttService {
 
             @Override
             public void messageArrived(String topic, MqttMessage message) throws MqttException {
+                if (topic.equals(topic + "/status")) {
+                    System.out.println("Status update from " + topic + ": " + new String(message.getPayload()));
+                }
                 // This method is called when a message arrives
                 System.out.println("Message received: " + new String(message.getPayload()));
                 // get payload from message
