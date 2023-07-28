@@ -3,6 +3,7 @@ package com.humidty.arge.model;
 //import javax.persistence.PreUpdate;
 //import javax.persistence.PrePersist;
 import com.humidty.arge.helper.Schedule;
+import com.humidty.arge.helper.WateringPeriod;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 
@@ -19,10 +20,12 @@ public class Device {
 //    }
     @Id
     private String deviceID;
-    private Boolean wateringSituation;
+
     private Boolean offWatering;
     private Boolean isOnline;
-    private int humidity;
+    private WateringPeriod wateringPeriod;
+    private int startWateringHumidityThreshold;
+    private int stopWateringHumidityThreshold;
     private Date lastUpdateTime;
     private Date lastWateringTime;
     private Date createDate;

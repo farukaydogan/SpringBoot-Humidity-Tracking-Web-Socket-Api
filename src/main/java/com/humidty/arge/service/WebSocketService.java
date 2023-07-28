@@ -1,5 +1,6 @@
 package com.humidty.arge.service;
 
+import com.humidty.arge.helper.WateringPeriod;
 import com.humidty.arge.model.Device;
 import com.humidty.arge.model.DeviceInformation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,14 +36,33 @@ public class WebSocketService{
         deviceInformation.setDeviceID(deviceID);
 
 
-        Device device=new Device();
-        // Bu değerleri kullanarak istediğiniz işlemleri yapabilirsiniz
-        if (humidity < device.getHumidity()) {
-            device.setWateringSituation(true);
-            device.setLastWateringTime(new Date());
-        } else {
-            device.setWateringSituation(false);
+        Device device= deviceService.getDeviceById(deviceID);
+
+        WateringPeriod wateringPeriod =device.getWateringPeriod();
+        int startWateringHumidityThreshold = device.getStartWateringHumidityThreshold();
+        int stopWateringHumidityThreshold = device.getStopWateringHumidityThreshold();
+
+        System.out.println(wateringPeriod);
+        System.out.println(startWateringHumidityThreshold);
+        System.out.println(stopWateringHumidityThreshold);
+
+        if (wateringPeriod != WateringPeriod.STOPPED){
+            if (wateringPeriod == WateringPeriod.AWAIT_WATERING) {
+                device.setWateringPeriod(WateringPeriod.WATERING);
+                System.out.println("alo WATERING");
+            } else if (wateringPeriod == WateringPeriod.WATERING && humidity >= stopWateringHumidityThreshold) {
+                device.setWateringPeriod(WateringPeriod.AWAIT_SATURATION);
+                System.out.println("alo AWAIT_SATURATION");
+            } else if (wateringPeriod == WateringPeriod.AWAIT_SATURATION && humidity <=
+                    startWateringHumidityThreshold) {
+                device.setWateringPeriod(WateringPeriod.AWAIT_WATERING);
+                System.out.println("alo AWAIT_WATERING");
+            }
+
         }
+
+        // Bu değerleri kullanarak istediğiniz işlemleri yapabilirsiniz
+
         device.setLastUpdateTime(new Date());
         deviceService.updateDevice(deviceID,device);
 

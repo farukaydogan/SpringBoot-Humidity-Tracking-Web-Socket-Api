@@ -1,5 +1,6 @@
 package com.humidty.arge.service;
 
+import com.humidty.arge.helper.WateringPeriod;
 import com.humidty.arge.model.Device;
 import com.humidty.arge.repository.DeviceRepository;
 import org.json.JSONObject;
@@ -42,18 +43,24 @@ public class DeviceService {
         Device newDevice = new Device();
         newDevice.setDeviceID(device.getDeviceID());
         newDevice.setCreateDate(new Date());
-        newDevice.setWateringSituation(false);
+        newDevice.setWateringPeriod(WateringPeriod.AWAIT_SATURATION);
         newDevice.setOffWatering(false);
         return deviceRepository.save(newDevice);
     }
 
     public void updateDevice(String id, Device updateDevice) {
         Device oldDevice = getDeviceById(id);
-        oldDevice.setWateringSituation(updateDevice.getWateringSituation());
 
+        if (updateDevice.getWateringPeriod()!=null){
+            oldDevice.setWateringPeriod(updateDevice.getWateringPeriod());
+        }
 
-        if (updateDevice.getHumidity()!=0){
-            oldDevice.setHumidity(updateDevice.getHumidity());
+        if (updateDevice.getStopWateringHumidityThreshold()!=0){
+            oldDevice.setStopWateringHumidityThreshold(updateDevice.getStopWateringHumidityThreshold());
+        }
+
+        if (updateDevice.getStartWateringHumidityThreshold()!=0){
+            oldDevice.setStartWateringHumidityThreshold(updateDevice.getStartWateringHumidityThreshold());
         }
 
         if (updateDevice.getIsOnline()!=null){
@@ -81,7 +88,7 @@ public class DeviceService {
     public void startDevice(String id) throws IOException {
 
         Device oldDevice = getDeviceById(id);
-        oldDevice.setWateringSituation(true);
+        oldDevice.setWateringPeriod(WateringPeriod.AWAIT_WATERING);
         oldDevice.setOffWatering(false);
         deviceRepository.save(oldDevice);
 
@@ -97,7 +104,7 @@ public class DeviceService {
 
     public void stopDevice(String id) throws IOException {
         Device oldDevice = getDeviceById(id);
-        oldDevice.setWateringSituation(false);
+        oldDevice.setWateringPeriod(WateringPeriod.STOPPED);
         oldDevice.setOffWatering(true);
         deviceRepository.save(oldDevice);
 
@@ -115,7 +122,7 @@ public class DeviceService {
 
         Device device =getDeviceById(id);
 
-        status.put("status", device.getWateringSituation());
+        status.put("status", device.getWateringPeriod());
 
         status.put("stop", device.getOffWatering());
 
