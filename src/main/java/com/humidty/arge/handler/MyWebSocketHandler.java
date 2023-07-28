@@ -63,9 +63,9 @@ public class MyWebSocketHandler extends TextWebSocketHandler  {
 
         double humidity = jsonObj.getDouble("humidity");
 
-        TextMessage responseMessage = webSocketService.handleHumidity(deviceId,humidity);
+        String responseMessage = webSocketService.handleHumidity(deviceId,humidity);
 
-        session.sendMessage(responseMessage);
+//        session.sendMessage(responseMessage);
 
     }
 
@@ -80,7 +80,7 @@ public class MyWebSocketHandler extends TextWebSocketHandler  {
 
         webSocketService.onOffInfoUpdateDevice(true,deviceID);
         // devicein last state check edilip ona gore mesaj gonderiliyor
-        sessionManagementService.registerSession(deviceID,session,deviceService.prepareStatusDeviceJson(deviceID,"Device Connect successfully"));
+//        sessionManagementService.registerSession(deviceID,session,deviceService.prepareStatusDeviceJson(deviceID,"Device Connect successfully"));
 
 
     }

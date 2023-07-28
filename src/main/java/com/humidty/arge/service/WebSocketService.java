@@ -28,7 +28,7 @@ public class WebSocketService{
         old.setIsOnline(onOrOf);
         deviceService.updateDevice(deviceId,old);
     }
-    public TextMessage handleHumidity(String deviceID,double humidity) {
+    public String  handleHumidity(String deviceID,double humidity) {
         //        save db humidity
 
         DeviceInformation deviceInformation =new DeviceInformation();

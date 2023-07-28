@@ -95,11 +95,11 @@ public class DeviceService {
         // Send start message to device
         WebSocketSession deviceSession = sessionManagementService.getSessionById(id);
 
-        if (deviceSession != null && deviceSession.isOpen()) {
-            deviceSession.sendMessage(prepareStatusDeviceJson(id,"Device Is Started"));
-        } else {
-            System.out.println("startElse");
-        }
+//        if (deviceSession != null && deviceSession.isOpen()) {
+//            deviceSession.sendMessage(prepareStatusDeviceJson(id,"Device Is Started"));
+//        } else {
+//            System.out.println("startElse");
+//        }
     }
 
     public void stopDevice(String id) throws IOException {
@@ -110,14 +110,14 @@ public class DeviceService {
 
         // Send stop message to device
         WebSocketSession deviceSession = sessionManagementService.getSessionById(id);
-        if (deviceSession != null && deviceSession.isOpen()) {
-            deviceSession.sendMessage(prepareStatusDeviceJson(id,"Device Is Stopped"));
-        } else {
-            System.out.println("stopElse");
-        }
+//        if (deviceSession != null && deviceSession.isOpen()) {
+//            deviceSession.sendMessage(prepareStatusDeviceJson(id,"Device Is Stopped"));
+//        } else {
+//            System.out.println("stopElse");
+//        }
     }
 
-    public TextMessage prepareStatusDeviceJson(String id,String message){
+    public String prepareStatusDeviceJson(String id, String message){
         JSONObject status = new JSONObject();
 
         Device device =getDeviceById(id);
@@ -128,7 +128,7 @@ public class DeviceService {
 
         status.put("message",message);
 
-        return new TextMessage(status.toString());
+        return  status.toString();
     }
 
 
