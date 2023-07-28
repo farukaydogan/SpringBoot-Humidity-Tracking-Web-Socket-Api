@@ -32,7 +32,7 @@ public class MqttConfiguration {
         connOpts.setUserName(username);
         connOpts.setPassword(password.toCharArray());
         connOpts.setCleanSession(true);
-        connOpts.setWill(topic + "/status", "Offline".getBytes(), 2, true);  // <-- Add this line for LWT
+//        connOpts.setWill(topic + "/status", "Offline".getBytes(), 2, true);  // <-- Add this line for LWT
         return connOpts;
     }
 
@@ -49,8 +49,7 @@ public class MqttConfiguration {
             MqttClient mqttClient = new MqttClient(broker, clientId, new MemoryPersistence());
             MqttConnectOptions connOpts = new MqttConnectOptions();
             connOpts.setCleanSession(true);
-            connOpts.setWill("/status", "Offline".getBytes(), 2, true);
-            connOpts.setCleanSession(true);
+//            connOpts.setWill("/status", "Offline".getBytes(), 2, true);
             mqttClient.connect(connOpts);
             return mqttClient;
         } catch (MqttException e) {

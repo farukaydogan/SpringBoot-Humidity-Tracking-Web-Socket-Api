@@ -18,7 +18,7 @@ public class DeviceInformation {
     @Indexed
     private String deviceID;
     private Double humidity;
-    private Date date= new Date();
+    private Date date;
 
     // Diğer getter ve setter metodları
 

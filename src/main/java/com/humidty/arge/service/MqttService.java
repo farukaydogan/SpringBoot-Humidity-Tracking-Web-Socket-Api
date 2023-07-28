@@ -32,6 +32,7 @@ public class MqttService {
 
             @Override
             public void messageArrived(String topic, MqttMessage message) throws MqttException {
+
                 if (topic.equals(topic + "/status")) {
                     System.out.println("Status update from " + topic + ": " + new String(message.getPayload()));
                 }
@@ -49,10 +50,6 @@ public class MqttService {
                 // JSON objesinden deviceID ve humidity değerlerini alın
                 String deviceId = jsonObj.getString("deviceID");
 
-                // Eğer deviceID, kabul edilenler listesinde değilse, bağlantıyı kapat
-//                if (!acceptedDeviceIds.contains(deviceId)) {
-//                    return;
-//                }
 
                 double humidity = jsonObj.getDouble("humidity");
 
@@ -62,7 +59,7 @@ public class MqttService {
                 System.out.println(responseMessage);
                 byte[] responseBytes = responseMessage.getBytes(StandardCharsets.UTF_8);
 
-        // Yeni bir MqttMessage oluşturun ve yayın yapın
+                // Yeni bir MqttMessage oluşturun ve yayın yapın
                 MqttMessage mqttMessage = new MqttMessage(responseBytes);
                 mqttClient.publish("response_topic", mqttMessage);
             }
