@@ -59,6 +59,10 @@ public class DeviceService {
             oldDevice.setStopWateringHumidityThreshold(updateDevice.getStopWateringHumidityThreshold());
         }
 
+        if (updateDevice.getSensorIds()!=null){
+            oldDevice.setSensorIds(updateDevice.getSensorIds());
+        }
+
         if (updateDevice.getStartWateringHumidityThreshold()!=0){
             oldDevice.setStartWateringHumidityThreshold(updateDevice.getStartWateringHumidityThreshold());
         }

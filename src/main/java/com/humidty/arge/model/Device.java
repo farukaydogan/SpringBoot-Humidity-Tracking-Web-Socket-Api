@@ -8,6 +8,7 @@ import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 
 import java.util.Date;
 import java.util.List;
@@ -31,7 +32,7 @@ public class Device {
     private WateringPeriod wateringPeriod;
     private int startWateringHumidityThreshold;
     private int stopWateringHumidityThreshold;
-    private List<SensorData> sensorDataList;
+    private List<String> sensorIds;
 
     private Date lastUpdateTime;
     private Date lastWateringTime;
@@ -45,4 +46,16 @@ public class Device {
         schedule = new Schedule();
         schedule.initializeAsTrue();
     }
+
+    // Getters and setters...
+
+    public List<String> getSensorIds() {
+        return sensorIds;
+    }
+
+    public void setSensorIds(List<String> sensorIds) {
+        this.sensorIds = sensorIds;
+    }
+
+
 }

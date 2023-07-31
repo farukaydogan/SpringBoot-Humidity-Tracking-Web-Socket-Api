@@ -6,8 +6,8 @@ import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.*;
 
 
-@Configuration
-@EnableWebSocket
+//@Configuration
+//@EnableWebSocket
 public class WebSocketConfig implements WebSocketConfigurer {
 
     private final MyWebSocketHandler myWebSocketHandler;
