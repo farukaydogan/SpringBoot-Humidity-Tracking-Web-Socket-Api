@@ -1,8 +1,10 @@
 package com.humidty.arge.service;
 
 import com.humidty.arge.model.SensorData;
+import com.humidty.arge.repository.DeviceRepository;
 import com.humidty.arge.repository.SensorDataRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -13,7 +15,8 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class SensorDataService {
 
-    private SensorDataRepository sensorDataRepository;
+    private  SensorDataRepository sensorDataRepository;
+
 
     public Page<SensorData> getSensorDataById(String deviceId, Integer pageNumber, Integer pageSize, Sort sort) {
         int defaultPageNumber = 0;
@@ -26,7 +29,7 @@ public class SensorDataService {
             pageSize = defaultPageSize;
         }
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
-        return sensorDataRepository.findByDeviceID(deviceId, pageable);
+        return sensorDataRepository.findByDeviceId(deviceId, pageable);
     }
 
     public SensorData createSensorData(SensorData newSensorData) {

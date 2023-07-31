@@ -8,5 +8,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface SensorDataRepository extends MongoRepository<SensorData, String> {
 
-        Page<SensorData> findByDeviceID(String id, Pageable pageable);
+        Page<SensorData> findByDeviceId(String id, Pageable pageable);
 }

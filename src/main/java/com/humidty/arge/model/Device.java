@@ -7,6 +7,7 @@ import com.humidty.arge.helper.WateringPeriod;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 
 import java.util.Date;
 import java.util.List;
@@ -23,6 +24,8 @@ public class Device {
     @Id
     private String deviceID;
 
+    @Indexed
+    private String userId;
     private Boolean offWatering;
     private Boolean isOnline;
     private WateringPeriod wateringPeriod;

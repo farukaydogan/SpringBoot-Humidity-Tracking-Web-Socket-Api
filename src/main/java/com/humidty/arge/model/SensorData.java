@@ -1,5 +1,6 @@
 package com.humidty.arge.model;
 
+import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.mongodb.core.index.Indexed;
 
@@ -7,17 +8,16 @@ import java.util.Date;
 
 
 
+@Data
 public class SensorData {
-        private Long id;
-        private String sensorId;
+        private Long sensorId;
+        @Indexed
+        private Nutrient nutrientId;
         @Indexed
         private String deviceId;
+
         private double humidity;
-        private double ec;
-        private double pH;
-        private int nitrogen;
-        private double potassium;
-        private double phosphorus;
+
         @CreatedDate // This annotation will automatically set the creation date when saving the document
         private Date date;
         // Constructor, getters, setters...
