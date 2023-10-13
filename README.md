@@ -1,4 +1,5 @@
 # SpringBoot-Humidity-Tracking-Web-Socket-Api
+## This project remotely manages the irrigation system, reads soil moisture levels, and sends notifications in case of any issues. It determines the type of irrigation and the type of plant to be nourished, retrieves the latest communication and moisture values. Additionally, it employs JSON Web Tokens for authorization, allowing multiple users to access the system.
 
 <img width="1133" alt="Screenshot 2023-10-13 at 10 25 38" src="https://github.com/farukaydogan/ARGE-WATERING/assets/57232389/dd19c8d3-8304-4b56-9a46-4892592f516e">
 It is an API written to determine the moisture content of the crops.
